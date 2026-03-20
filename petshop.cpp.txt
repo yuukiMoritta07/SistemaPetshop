@@ -1,0 +1,227 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "petshop.h"
+
+#include <string.h>
+
+void cadastrarCliente() {
+    Cliente c;
+    FILE *f = fopen("clientes.txt", "a");
+
+    fflush(stdin);
+
+    printf("Nome: ");
+    scanf(" %[^\n]", c.nome);
+
+    printf("Telefone: ");
+    scanf(" %[^\n]", c.telefone);
+
+    fprintf(f, "%s;%s\n", c.nome, c.telefone);
+
+    fclose(f);
+
+    printf("Cliente cadastrado!\n");
+}
+void listarClientes() {
+    Cliente c;
+    FILE *f = fopen("clientes.txt", "r");
+
+    if (f == NULL) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    while (fscanf(f, " %[^;];%[^\n]", c.nome, c.telefone) == 2) {
+        printf("Nome: %s | Telefone: %s\n", c.nome, c.telefone);
+    }
+
+    fclose(f);
+}
+void cadastrarPet() {
+    Pet p;
+    FILE *f = fopen("pets.txt", "a");
+
+    printf("Nome do pet: ");
+    scanf(" %[^\n]", p.nome);
+    printf("Tipo: ");
+    scanf(" %[^\n]", p.tipo);
+    printf("Idade: ");
+    scanf("%d", &p.idade);
+
+    fprintf(f, "%s;%s;%d\n", p.nome, p.tipo, p.idade);
+    fclose(f);
+
+    printf("Pet cadastrado!\n");
+}
+
+void listarPets() {
+    Pet p;
+    FILE *f = fopen("pets.txt", "r");
+
+    if (f == NULL) {
+        printf("Nenhum pet cadastrado.\n");
+        return;
+    }
+
+    while (fscanf(f, " %[^;];%[^;];%d", p.nome, p.tipo, &p.idade) == 3) {
+        printf("Nome: %s | Tipo: %s | Idade: %d\n", p.nome, p.tipo, p.idade);
+    }
+
+    fclose(f);
+}
+
+void buscarCliente() {
+    Cliente c;
+    FILE *f = fopen("clientes.txt", "r");
+
+    char busca[50];
+    int encontrado = 0;
+
+    if (f == NULL) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    printf("Digite o nome para buscar: ");
+    scanf(" %[^\n]", busca);
+
+    while (fscanf(f, " %[^;];%[^\n]", c.nome, c.telefone) == 2) {
+        if (strcmp(c.nome, busca) == 0) {
+            printf("Encontrado: %s | %s\n", c.nome, c.telefone);
+            encontrado = 1;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Cliente nao encontrado.\n");
+    }
+
+    fclose(f);
+}
+
+void editarCliente() {
+    Cliente c;
+    FILE *f = fopen("clientes.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    char busca[50];
+    int encontrado = 0;
+
+    if (f == NULL) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    printf("Digite o nome do cliente que deseja editar: ");
+    scanf(" %[^\n]", busca);
+
+    while (fscanf(f, " %[^;];%[^\n]", c.nome, c.telefone) == 2) {
+        if (strcmp(c.nome, busca) == 0) {
+            printf("Novo nome: ");
+            scanf(" %[^\n]", c.nome);
+
+            printf("Novo telefone: ");
+            scanf(" %[^\n]", c.telefone);
+
+            encontrado = 1;
+        }
+
+        fprintf(temp, "%s;%s\n", c.nome, c.telefone);
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("clientes.txt");
+    rename("temp.txt", "clientes.txt");
+
+    if (encontrado)
+        printf("Cliente atualizado!\n");
+    else
+        printf("Cliente nao encontrado.\n");
+}
+
+void deletarCliente() {
+    Cliente c;
+    FILE *f = fopen("clientes.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    char busca[50];
+    int encontrado = 0;
+
+    if (f == NULL) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    printf("Digite o nome do cliente que deseja deletar: ");
+    scanf(" %[^\n]", busca);
+
+    while (fscanf(f, " %[^;];%[^\n]", c.nome, c.telefone) == 2) {
+        if (strcmp(c.nome, busca) != 0) {
+            fprintf(temp, "%s;%s\n", c.nome, c.telefone);
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("clientes.txt");
+    rename("temp.txt", "clientes.txt");
+
+    if (encontrado)
+        printf("Cliente deletado!\n");
+    else
+        printf("Cliente nao encontrado.\n");
+}
+
+
+
+
+void deletarPets() {
+    Pet p;
+    FILE *f = fopen("pets.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    char busca[50];
+    int encontrado = 0;
+
+    if (f == NULL) {
+        printf("Nenhum pet cadastrado.\n");
+        return;
+    }
+    if (temp == NULL) {
+        printf("Erro ao criar arquivo temporário.\n");
+        fclose(f);
+        return;
+    }
+
+    printf("Digite o nome do Pet: ");
+    scanf(" %[^\n]", busca);
+
+
+    while (fscanf(f, " %[^;];%[^;];%d", p.nome, p.tipo, &p.idade) == 3) {
+        if (strcmp(p.nome, busca) != 0) {
+            fprintf(temp, "%s;%s;%d\n", p.nome, p.tipo, p.idade);
+        } else {
+            encontrado = 1;
+        }
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("pets.txt");
+    rename("temp.txt", "pets.txt");
+
+    if (encontrado)
+        printf("Pet deletado!\n");
+    else
+        printf("Pet nao encontrado.\n");
+}
+
+
+
+

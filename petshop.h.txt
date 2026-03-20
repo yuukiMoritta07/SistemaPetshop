@@ -1,0 +1,25 @@
+#ifndef PETSHOP_H
+#define PETSHOP_H
+
+typedef struct {
+    char nome[50];
+    char telefone[20];
+} Cliente;
+
+typedef struct {
+    char nome[50];
+    char tipo[20];
+    int idade;
+} Pet;
+
+// Funções
+void cadastrarCliente();
+void listarClientes();
+void cadastrarPet();
+void listarPets();
+void buscarCliente();
+void editarCliente();
+void deletarCliente();
+void deletarPets();
+
+#endif

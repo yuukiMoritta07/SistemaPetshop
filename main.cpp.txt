@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "petshop.h"
+
+// Função pra limpar tela
+void limparTela() {
+    system("cls"); // Windows
+}
+
+// Função pra dar cor (ANSI)
+void cor(int c) {
+    printf("\033[%dm", c);
+}
+
+int main() {
+    int opcao;
+
+    do {
+        limparTela();
+
+        cor(36); // azul claro
+        printf("====================================\n");
+        printf("        ??  PET SHOP SYSTEM  ??\n");
+        printf("====================================\n");
+
+        cor(33); // amarelo
+        printf("1 - Cadastrar Cliente\n");
+        printf("2 - Listar Clientes\n");
+        printf("3 - Cadastrar Pet\n");
+        printf("4 - Listar Pets\n");
+        printf("5 - Buscar Cliente\n");
+        printf("6 - Editar Cliente\n");
+        printf("7 - Deletar Cliente\n");
+        printf("8 - Delatar Pet\n");
+        
+
+        cor(31); // vermelho
+        printf("0 - Sair\n");
+
+        cor(37); // branco
+        printf("====================================\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        limparTela();
+
+        switch(opcao) {
+            case 1:
+                cor(32);
+                printf("=== CADASTRO DE CLIENTE ===\n");
+                cadastrarCliente();
+                break;
+
+            case 2:
+                cor(32);
+                printf("=== LISTA DE CLIENTES ===\n");
+                listarClientes();
+                break;
+
+            case 3:
+                cor(32);
+                printf("=== CADASTRO DE PET ===\n");
+                cadastrarPet();
+                break;
+
+            case 4:
+                cor(32);
+                printf("=== LISTA DE PETS ===\n");
+                listarPets();
+                break;
+                
+            case 5:
+                buscarCliente();
+                break;
+
+            case 6:
+                editarCliente();
+                 break;
+
+            case 7:
+                 deletarCliente();
+                 break;
+                 
+             case 8:
+                 deletarPets();
+                 break;
+
+            case 0:
+                cor(31);
+                printf("Saindo do sistema...\n");
+                break;
+
+            default:
+                cor(31);
+                printf("Opcao invalida!\n");
+        }
+
+        cor(37);
+        printf("\nPressione qualquer tecla para continuar...");
+        getch(); // pausa
+
+    } while(opcao != 0);
+
+    return 0;
+}
